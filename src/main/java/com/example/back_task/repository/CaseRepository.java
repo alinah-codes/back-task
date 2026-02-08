@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface CaseRepository extends JpaRepository<Case, Long> {
 
@@ -17,6 +18,9 @@ public interface CaseRepository extends JpaRepository<Case, Long> {
             CaseStatus status,
             LocalDate deadline
     );
+    Optional<Case> findByCaseNumber(String caseNumber);
+
+
 
 }
 

@@ -1,6 +1,7 @@
 package com.example.back_task.entity;
 
 import com.example.back_task.enums.CaseStatus;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -45,14 +46,20 @@ public class Case {
     private LocalDate deadline;
 
 
-
-    @OneToMany(mappedBy = "caseEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    @OneToMany(mappedBy = "caseEntity")
+    @JsonManagedReference
     private List<Party> parties = new ArrayList<>();
 
+
+    @Builder.Default
     @OneToMany(mappedBy = "caseEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Document> documents = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "caseEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StatusHistory> statusHistory = new ArrayList<>();
+
 }
 

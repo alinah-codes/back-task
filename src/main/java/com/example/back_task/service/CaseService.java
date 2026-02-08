@@ -1,6 +1,7 @@
 package com.example.back_task.service;
 
 import com.example.back_task.dto.*;
+import com.example.back_task.entity.Case;
 import com.example.back_task.enums.CaseStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,5 +25,11 @@ public interface CaseService {
     CaseResponseDto updateStatus(Long id, CaseStatusUpdateRequestDto request);
 
     Page<StatusHistoryResponseDto> getHistory(Long id, int page, int size);
+
+    Case findByCaseNumber(String caseNumber);
+
+    Page<Case> findAllByStatus(CaseStatus status, Pageable pageable);
+
+    Page<Case> findAll(Pageable pageable);
 }
 

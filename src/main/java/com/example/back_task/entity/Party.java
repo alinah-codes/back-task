@@ -2,6 +2,7 @@ package com.example.back_task.entity;
 
 import com.example.back_task.enums.PartyType;
 import com.example.back_task.enums.RoleType;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,7 +30,9 @@ public class Party {
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "case_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "case_id")
+    @JsonBackReference
     private Case caseEntity;
+
 }

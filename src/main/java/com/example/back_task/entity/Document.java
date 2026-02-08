@@ -1,5 +1,6 @@
 package com.example.back_task.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,5 +24,6 @@ public class Document {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "case_id", nullable = false)
+    @JsonBackReference
     private Case caseEntity;
 }

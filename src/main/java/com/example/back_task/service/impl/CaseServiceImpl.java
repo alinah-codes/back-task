@@ -158,5 +158,21 @@ public class CaseServiceImpl implements CaseService {
                         .build());
     }
 
+    @Override
+    public Case findByCaseNumber(String caseNumber) {
+        return caseRepository.findByCaseNumber(caseNumber)
+                .orElseThrow(() -> new CaseNotFoundException("Case not found"));
+    }
+
+    @Override
+    public Page<Case> findAllByStatus(CaseStatus status, Pageable pageable) {
+        return caseRepository.findAllByStatus(status, pageable);
+    }
+
+    @Override
+    public Page<Case> findAll(Pageable pageable) {
+        return caseRepository.findAll(pageable);
+    }
+
 }
 
