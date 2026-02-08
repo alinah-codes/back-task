@@ -12,6 +12,7 @@ import com.example.back_task.repository.CaseRepository;
 import com.example.back_task.repository.StatusHistoryRepository;
 import com.example.back_task.service.CaseService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class CaseServiceImpl implements CaseService {
 
@@ -85,13 +87,17 @@ public class CaseServiceImpl implements CaseService {
     public CaseResponseDto changeStatus(Long id, CaseStatusChangeDto dto) {
 
         Case caseEntity = caseRepository.findById(id)
-                .orElseThrow(() -> new BusinessException("Case not found"));
+                .orElseThrow(() -> new CaseNotFoundException("Case not found"));
 
+        CaseStatus oldStatus = caseEntity.getStatus();
         CaseStatus newStatus = dto.getNewStatus();
 
         statusMachine.validateTransition(caseEntity, newStatus);
 
-        CaseStatus oldStatus = caseEntity.getStatus();
+        if (newStatus == CaseStatus.COMPLETED &&
+                (caseEntity.getDocuments() == null || caseEntity.getDocuments().isEmpty())) {
+            throw new BusinessException("Cannot complete case without documents");
+        }
 
         caseEntity.setStatus(newStatus);
 
@@ -109,39 +115,15 @@ public class CaseServiceImpl implements CaseService {
 
         historyRepository.save(history);
 
-        Case updated = caseRepository.save(caseEntity);
+        log.info("Case {} status changed from {} to {} by {}",
+                caseEntity.getId(),
+                oldStatus,
+                newStatus,
+                dto.getChangedBy());
 
-        return caseMapper.toResponse(updated);
+        return caseMapper.toResponse(caseEntity);
     }
 
-    @Transactional
-    @Override
-    public CaseResponseDto updateStatus(Long id, CaseStatusUpdateRequestDto request) {
-
-        Case entity = caseRepository.findById(id)
-                .orElseThrow(() -> new CaseNotFoundException("Case not found"));
-
-        CaseStatus oldStatus = entity.getStatus();
-        CaseStatus newStatus = request.getStatus();
-
-        statusMachine.validateTransition(entity, newStatus);
-
-
-        entity.setStatus(newStatus);
-
-        caseRepository.save(entity);
-
-        StatusHistory history = new StatusHistory();
-        history.setCaseEntity(entity);
-        history.setOldStatus(oldStatus);
-        history.setNewStatus(newStatus);
-
-        history.setChangedAt(LocalDateTime.now());
-
-        historyRepository.save(history);
-
-        return caseMapper.toResponse(entity);
-    }
 
     @Override
     public Page<StatusHistoryResponseDto> getHistory(Long id, int page, int size) {
@@ -172,6 +154,16 @@ public class CaseServiceImpl implements CaseService {
     @Override
     public Page<Case> findAll(Pageable pageable) {
         return caseRepository.findAll(pageable);
+    }
+    private CaseResponseDto mapToResponse(Case caseEntity) {
+        return CaseResponseDto.builder()
+                .id(caseEntity.getId())
+                .caseNumber(caseEntity.getCaseNumber())
+                .procedureType(caseEntity.getProcedureType())
+                .status(caseEntity.getStatus())
+                .startDate(caseEntity.getStartDate())
+                .endDate(caseEntity.getEndDate())
+                .build();
     }
 
 }

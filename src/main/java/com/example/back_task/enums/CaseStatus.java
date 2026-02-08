@@ -5,6 +5,5 @@ public enum CaseStatus {
     IN_PROGRESS,
     PROCEDURE_RUNNING,
     COMPLETED,
-    ARCHIVED,
-    OVERDUE
+    ARCHIVED
     }

@@ -21,8 +21,6 @@ public interface CaseService {
     @Transactional
     CaseResponseDto changeStatus(Long id, CaseStatusChangeDto dto);
 
-    @Transactional
-    CaseResponseDto updateStatus(Long id, CaseStatusUpdateRequestDto request);
 
     Page<StatusHistoryResponseDto> getHistory(Long id, int page, int size);
 

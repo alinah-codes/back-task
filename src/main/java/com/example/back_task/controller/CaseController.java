@@ -1,9 +1,6 @@
 package com.example.back_task.controller;
 
-import com.example.back_task.dto.CaseCreateDto;
-import com.example.back_task.dto.CaseResponseDto;
-import com.example.back_task.dto.CaseStatusUpdateRequestDto;
-import com.example.back_task.dto.StatusHistoryResponseDto;
+import com.example.back_task.dto.*;
 import com.example.back_task.entity.Case;
 import com.example.back_task.enums.CaseStatus;
 import com.example.back_task.service.CaseService;
@@ -52,9 +49,9 @@ public class CaseController {
     @PatchMapping("/{id}/status")
     public CaseResponseDto updateStatus(
             @PathVariable Long id,
-            @Valid @RequestBody CaseStatusUpdateRequestDto request
+            @Valid @RequestBody CaseStatusChangeDto request
     ) {
-        return caseService.updateStatus(id, request);
+        return caseService.changeStatus(id, request);
     }
 
     @GetMapping("/{id}/history")

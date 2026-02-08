@@ -38,12 +38,12 @@ public class CaseSchedulerService {
         for (Case caseEntity : expiredCases) {
 
             CaseStatus oldStatus = caseEntity.getStatus();
-            caseEntity.setStatus(CaseStatus.OVERDUE);
+            caseEntity.setStatus(CaseStatus.ARCHIVED);
 
             StatusHistory history = StatusHistory.builder()
                     .caseEntity(caseEntity)
                     .oldStatus(oldStatus)
-                    .newStatus(CaseStatus.OVERDUE)
+                    .newStatus(CaseStatus.ARCHIVED)
                     .changedAt(LocalDateTime.now())
                     .changedBy("SYSTEM")
                     .build();
