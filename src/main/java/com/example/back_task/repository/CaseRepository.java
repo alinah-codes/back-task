@@ -6,13 +6,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
+import java.time.LocalDate;
+import java.util.List;
 
 public interface CaseRepository extends JpaRepository<Case, Long> {
 
-    Optional<Case> findByCaseNumber(String caseNumber);
-
     Page<Case> findAllByStatus(CaseStatus status, Pageable pageable);
-
     boolean existsByCaseNumber(String caseNumber);
+    List<Case> findAllByStatusAndDeadlineBefore(
+            CaseStatus status,
+            LocalDate deadline
+    );
+
 }
+

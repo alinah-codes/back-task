@@ -1,11 +1,14 @@
 package com.example.back_task.repository;
 
 import com.example.back_task.entity.StatusHistory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
 
 public interface StatusHistoryRepository extends JpaRepository<StatusHistory, Long> {
 
-    List<StatusHistory> findAllByCaseEntityIdOrderByChangedAtDesc(Long caseId);
+    Page<StatusHistory> findAllByCaseEntity_Id(Long id, Pageable pageable);
+
+
 }

@@ -41,6 +41,10 @@ public class Case {
 
     private LocalDate endDate;
 
+    @Column
+    private LocalDate deadline;
+
+
 
     @OneToMany(mappedBy = "caseEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Party> parties = new ArrayList<>();
