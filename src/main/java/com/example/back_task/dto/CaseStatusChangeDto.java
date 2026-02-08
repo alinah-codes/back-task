@@ -1,17 +1,24 @@
 package com.example.back_task.dto;
 
 import com.example.back_task.enums.CaseStatus;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
-@Data
+@Schema(description = "Request for changing case status")
 public class CaseStatusChangeDto {
 
-    @NotNull(message = "New status is required")
+    @Schema(description = "New status of the case",
+            example = "IN_PROGRESS",
+            requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotNull
     private CaseStatus newStatus;
 
-    @NotBlank(message = "ChangedBy is required")
+    @Schema(description = "User who changed the status",
+            example = "admin",
+            requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotBlank
     private String changedBy;
 }
 
